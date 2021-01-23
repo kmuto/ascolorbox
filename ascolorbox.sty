@@ -1,5 +1,6 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{ascolorbox}[2019/4/30, Version 1.0.3]
+% original version: 2019/4/30, Version 1.0.3]
 \RequirePackage{tikz,tcolorbox,varwidth,multicol,ifthen,ifptex,ifluatex,ifuptex,ifxetex}
 
 \usetikzlibrary{calc}
@@ -32,10 +33,75 @@
                                    \def\ascb@gtfamily{\gtfamily}
                                    \def\ascb@zw#1#2{#2}
                             }
-                     }
+                 }
               }
 }
 
+% tcolorboxにパラメータを追加する
+\def\tcb@rv@line@width{.5pt}
+\def\tcb@rv@line@color{black}
+\tcbset{
+  rv line width/.store in=\tcb@rv@line@width,
+  rv line color/.store in=\tcb@rv@line@color
+}
+
+% ここからテスト中。こういうパラメータを変換で作って渡したいと思ったんだけど、展開でうまくいかないげ
+\newcommand{\reviewnote@tcoption}{rv line width=5pt,rv line color=red}
+
+% 結局これをパラメータベースで作らないといけないので、tcoptionパラメータもそのときに付けてしまえばいいか
+\newenvironment{reviewnote}[1][]{%
+  \csdef{rv@withcaption}{true}
+  \notblank{#1}{
+%    \begin{rv@simplesquarebox@caption}{#1}[\reviewnote@tcoption]% こちらはだめ。
+% ! Package pgfkeys Error: I do not know the key '/tcb/rv line width=5pt,rv line color=red' and I am going to ignore it. Perhaps you misspelled it.
+    \begin{rv@simplesquarebox@caption}{#1}[rv line width=5pt,rv line color=red]% 直接書けば通る
+  }{
+    \csundef{rv@withcaption}
+    \begin{rv@simplesquarebox@nocaption}
+  }
+}{
+  \ifcsdef{rv@withcaption}{
+    \end{rv@simplesquarebox@caption}
+  }{
+    \end{rv@simplesquarebox@nocaption}
+  }
+}
+
+% titleオプションを付ける可能性があることを考えると、Re:VIEW側ではcaption有無でやはり設定分けたほうがよさそう。
+\newenvironment{reviewcaution}[1][]{%
+  \csdef{rv@withcaption}{true}
+  \notblank{#1}{
+    \begin{rv@simplesquarebox@caption}{#1}[rv line width=.5pt,title=【#1】]
+  }{
+    \csundef{rv@withcaption}
+    \begin{rv@simplesquarebox@nocaption}
+  }
+}{
+  \ifcsdef{rv@withcaption}{
+    \end{rv@simplesquarebox@caption}
+  }{
+    \end{rv@simplesquarebox@nocaption}
+  }
+}
+
+\DeclareTColorBox{rv@simplesquarebox@nocaption}{ O{} }% 
+{empty, left=2mm, right=2mm, top=2.5mm, breakable,
+  borderline={\tcb@rv@line@width}{0pt}{\tcb@rv@line@color},
+  arc=0mm,
+  #1}
+
+\DeclareTColorBox{rv@simplesquarebox@caption}{ m O{} }% 
+{empty, left=2mm, right=2mm, top=-1mm, attach boxed title to top left={xshift=\ascb@zw{1.2}{11pt}}, boxed title style={empty,left=-2mm,right=-2mm}, colframe=\tcb@rv@line@color, coltitle=\tcb@rv@line@color, coltext=black, breakable,
+  underlay unbroken={\draw[\tcb@rv@line@color,line width=\tcb@rv@line@width](title.east) -- (title.east-|frame.east) -- (frame.south east) -- (frame.south west) -- (title.west-|frame.west) -- (title.west); },
+  underlay first={\draw[\tcb@rv@line@color,line width=\tcb@rv@line@width](title.east) -- (title.east-|frame.east) -- (frame.south east) ;
+  \draw[\tcb@rv@line@color,line width=\tcb@rv@line@width] (frame.south west) -- (title.west-|frame.west) -- (title.west); },
+  underlay middle={\draw[\tcb@rv@line@color,line width=\tcb@rv@line@width](frame.north east) -- (frame.south east) ;
+  \draw[\tcb@rv@line@color,line width=\tcb@rv@line@width](frame.south west) -- (frame.north west) ;},
+  underlay last={\draw[\tcb@rv@line@color,line width=\tcb@rv@line@width](frame.north east) -- (frame.south east) -- (frame.south west) -- (frame.north west) ;},
+  fonttitle=\ascb@gtfamily, title=【#1】,
+#2}
+
+%% ここから元々のascolorbox
 \DeclareTColorBox{simplesquarebox}{ o m O{.5} O{} }% 
 {empty, left=2mm, right=2mm, top=-1mm, attach boxed title to top left={xshift=\ascb@zw{1.2}{11pt}}, boxed title style={empty,left=-2mm,right=-2mm}, colframe=black, coltitle=black, coltext=black, breakable, 
 underlay unbroken={\draw[black,line width=#3pt](title.east) -- (title.east-|frame.east) -- (frame.south east) -- (frame.south west) -- (title.west-|frame.west) -- (title.west); },
@@ -44,8 +110,9 @@ underlay first={\draw[black,line width=#3pt](title.east) -- (title.east-|frame.e
 underlay middle={\draw[black,line width=#3pt](frame.north east) -- (frame.south east) ;
 \draw[black,line width=#3pt](frame.south west) -- (frame.north west) ;},
 underlay last={\draw[black,line width=#3pt](frame.north east) -- (frame.south east) -- (frame.south west) -- (frame.north west) ;},
-fonttitle=\ascb@gtfamily, IfValueTF={#1}{title=【#2】〈#1〉}{title=【#2】},#4}
-
+fonttitle=\ascb@gtfamily, %
+IfValueTF={#1}{title=【#2】〈#1〉}{title=【#2】},
+#4}
 
 \DeclareTColorBox{practicebox}{ m O{} }%
 {enhanced,sharp corners,colback=black!10!white, colframe=black!10!white , attach boxed title to top left={xshift=0mm,yshift=1mm}, fonttitle=\ascb@gtfamily,varwidth boxed title=0.85\linewidth, breakable, arc=0mm,title={#1},
