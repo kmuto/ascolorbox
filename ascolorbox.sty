@@ -41,10 +41,12 @@
 \def\tcb@rv@line@width{.5pt}
 \def\tcb@rv@line@color{black}
 \def\tcb@rv@line@reversecolor{white}
+\def\tcb@rv@dummy@caption{CAPTION} % 何か長さを作りたいときの文字列
 \tcbset{
   rv line width/.store in=\tcb@rv@line@width,
   rv line color/.store in=\tcb@rv@line@color,
-  rv line reversecolor/.store in=\tcb@rv@line@reversecolor
+  rv line reversecolor/.store in=\tcb@rv@line@reversecolor,
+  rv dummy caption/.store in=\tcb@rv@dummy@caption
 }
 
 % ここからテスト中。こういうパラメータを変換で作って渡したいと思ったんだけど、展開でうまくいかないげ
@@ -113,7 +115,7 @@ enlarge top by=2mm,
       \draw[\tcb@rv@line@color,ultra thick] (frame.north west) -- (frame.north east);
       \draw[\tcb@rv@line@color] ([yshift=-.8mm]frame.north west) -- ([yshift=-.8mm]frame.north east);
       \fill[\tcb@rv@line@color] ([yshift=1mm]frame.north west) rectangle +(6mm,6mm);
-      \node[white] at ([xshift=3mm,yshift=4mm]frame.north west){\large\ascb@textgt{練}};
+      \node[\tcb@rv@line@reversecolor] at ([xshift=3mm,yshift=4mm]frame.north west){\large\ascb@textgt{練}};
       \node at ([xshift=9mm,yshift=4mm]frame.north west){\large\ascb@textgt{習}};
       \fill[\tcb@rv@line@color] ([xshift=12mm,yshift=1mm]frame.north west) rectangle +(6mm,6mm);
       \node[\tcb@rv@line@reversecolor] at ([xshift=15mm,yshift=4mm]frame.north west){\large\ascb@textgt{問}};
@@ -126,6 +128,7 @@ enlarge top by=2mm,
   },
 #2}
 
+% reversecolorで白塗りのところも変えたいが、この描き方だと難しい
 \DeclareTColorBox{rv@practicebox@nocaption}{ O{} }%
 {enhanced,sharp corners,colback=black!10!white, colframe=black!10!white , attach boxed title to top left={xshift=0mm,yshift=1mm}, fonttitle=\ascb@gtfamily,varwidth boxed title=0.85\linewidth, breakable, arc=0mm,title={\mbox{}},
 enlarge top by=2mm,
@@ -134,7 +137,7 @@ enlarge top by=2mm,
       \draw[\tcb@rv@line@color,ultra thick] (frame.north west) -- (frame.north east);
       \draw[\tcb@rv@line@color] ([yshift=-.8mm]frame.north west) -- ([yshift=-.8mm]frame.north east);
       \fill[\tcb@rv@line@color] ([yshift=1mm]frame.north west) rectangle +(6mm,6mm);
-      \node[white] at ([xshift=3mm,yshift=4mm]frame.north west){\large\ascb@textgt{練}};
+      \node[\tcb@rv@line@reversecolor] at ([xshift=3mm,yshift=4mm]frame.north west){\large\ascb@textgt{練}};
       \node at ([xshift=9mm,yshift=4mm]frame.north west){\large\ascb@textgt{習}};
       \fill[\tcb@rv@line@color] ([xshift=12mm,yshift=1mm]frame.north west) rectangle +(6mm,6mm);
       \node[\tcb@rv@line@reversecolor] at ([xshift=15mm,yshift=4mm]frame.north west){\large\ascb@textgt{問}};
@@ -147,6 +150,106 @@ enlarge top by=2mm,
   },
 #1}
 
+% ascolorbox1
+\DeclareTColorBox{rv@ascolorbox1@caption}{ m O{}}%
+{enhanced,colback=white, skin=enhancedlast jigsaw,breakable, attach boxed title to top left={xshift=-4mm,yshift=-0.5mm}, fonttitle=\bfseries\ascb@gtfamily, varwidth boxed title=0.85\linewidth, colbacktitle=black!45!white,colframe=black,
+   boxed title style={empty,arc=0pt,outer arc=0pt,boxrule=0pt},
+   underlay boxed title={%
+\fill[black!45!white] (title.north west) -- (title.north east) -- +(\tcboxedtitleheight-1mm,-\tcboxedtitleheight+1mm)
+-- ([xshift=4mm,yshift=0.5mm]frame.north east) -- +(0mm,-1mm) -- (title.south west) -- cycle;
+     \fill[black!45!white!50!black] ([yshift=-0.5mm]frame.north west)
+       -- +(-0.4,0) -- +(0,-0.3) -- cycle;
+     \fill[black!45!white!50!black] ([yshift=-0.5mm]frame.north east)
+       -- +(0,-0.3) -- +(0.4,0) -- cycle;  },
+title=#1,#2}
+
+\DeclareTColorBox{rv@ascolorbox1@nocaption}{ O{}}%
+{enhanced,colback=white, skin=enhancedlast jigsaw,breakable, attach boxed title to top left={xshift=-4mm,yshift=-0.5mm}, fonttitle=\bfseries\ascb@gtfamily, varwidth boxed title=0.85\linewidth, colbacktitle=black!45!white,colframe=black,
+   boxed title style={empty,arc=0pt,outer arc=0pt,boxrule=0pt},
+% FIXME: むずかしい…
+#1}
+
+% ascolorbox2
+\DeclareTColorBox{rv@ascolorbox2@caption}{ m O{}}%
+{enhanced, colback=white, boxrule=1pt,
+attach boxed title to top left={xshift=.5cm,yshift=-2mm}, fonttitle=\bfseries,varwidth boxed title=0.85\linewidth,coltitle=black, boxed title style={enhanced,boxrule=0.75mm,colframe=white,
+    borderline={0.1mm}{0mm}{\tcb@rv@line@color},
+    borderline={0.1mm}{0.75mm}{\tcb@rv@line@color},
+    interior style={top color=black!10!white,bottom color=black!10!white,
+      middle color=black!30!white},
+    drop fuzzy shadow},
+  title={#1},#2}
+
+\DeclareTColorBox{rv@ascolorbox2@nocaption}{ O{}}%
+{enhanced, colback=white, boxrule=1pt,
+    #1}
+
+% ascolorbox3
+\DeclareTColorBox{rv@ascolorbox3@caption}{ m O{}}%
+{empty, breakable, title={#1},attach boxed title to top left, boxed title style={empty,size=minimal, toprule=2pt, top=4pt,
+underlay ={\draw[\tcb@rv@line@color,line width=3pt]
+         ([yshift=-1.6pt]frame.north west)--([yshift=-1.6pt]frame.north east);}},
+     coltitle=black,fonttitle=\large\bfseries,
+     before=\par\medskip\noindent,parbox=false,boxsep=0pt,left=0pt,right=3mm,top=4pt,
+     breakable,pad at break=0mm,
+underlay unbroken={\draw[\tcb@rv@line@color,line width=1pt]
+       ([yshift=-1pt]title.north east)--([xshift=-0.5pt,yshift=-1pt]title.north-|frame.east)
+       --([xshift=-0.5pt]frame.south east)--(frame.south west) ;
+       \draw[\tcb@rv@line@color,line width=.5pt]
+       ([yshift=-2.5pt]title.north east)--([xshift=-2pt,yshift=-2.5pt]title.north-|frame.east)
+       --([yshift=1.5pt,xshift=-2pt]frame.south east)--([yshift=1.5pt]frame.south west);},
+underlay first={\draw[\tcb@rv@line@color,line width=1pt]
+       ([yshift=-1pt]title.north east)--([xshift=-0.5pt,yshift=-1pt]title.north-|frame.east)
+       --([xshift=-0.5pt]frame.south east) ;
+       \draw[\tcb@rv@line@color,line width=.5pt]
+       ([yshift=-2.5pt]title.north east)--([xshift=-2pt,yshift=-2.5pt]title.north-|frame.east)
+       --([xshift=-2pt]frame.south east) ;},
+underlay middle={\draw[\tcb@rv@line@color,line width=1pt]
+       ([xshift=-0.5pt]frame.north east)
+       --([xshift=-0.5pt]frame.south east) ;
+       \draw[\tcb@rv@line@color,line width=.5pt]
+       ([xshift=-2pt]frame.north east)
+       --([xshift=-2pt]frame.south east);},
+underlay last={\draw[\tcb@rv@line@color,line width=1pt]
+       ([xshift=-0.5pt]frame.north east)
+       --([xshift=-0.5pt]frame.south east)--(frame.south west) ;
+       \draw[\tcb@rv@line@color,line width=.5pt]
+       ([xshift=-2pt]frame.north east)
+       --([yshift=1.5pt,xshift=-2pt]frame.south east)--([yshift=1.5pt]frame.south west);},
+#2}
+
+\DeclareTColorBox{rv@ascolorbox3@nocaption}{ O{}}%
+{empty, breakable, title={\phantom{\tcb@rv@dummy@caption}},attach boxed title to top left, boxed title style={empty,size=minimal, toprule=2pt, top=-5pt,
+underlay ={\draw[\tcb@rv@line@color,line width=3pt]
+         ([yshift=-1.6pt]frame.north west)--([yshift=-1.6pt]frame.north east);}},
+     coltitle=black,fonttitle=\large\bfseries,
+     before=\par\medskip\noindent,parbox=false,boxsep=0pt,left=0pt,right=3mm,top=4pt,
+     breakable,pad at break=0mm,
+underlay unbroken={\draw[\tcb@rv@line@color,line width=1pt]
+       ([yshift=-1pt]title.north east)--([xshift=-0.5pt,yshift=-1pt]title.north-|frame.east)
+       --([xshift=-0.5pt]frame.south east)--(frame.south west) ;
+       \draw[\tcb@rv@line@color,line width=.5pt]
+       ([yshift=-2.5pt]title.north east)--([xshift=-2pt,yshift=-2.5pt]title.north-|frame.east)
+       --([yshift=1.5pt,xshift=-2pt]frame.south east)--([yshift=1.5pt]frame.south west);},
+underlay first={\draw[\tcb@rv@line@color,line width=1pt]
+       ([yshift=-1pt]title.north east)--([xshift=-0.5pt,yshift=-1pt]title.north-|frame.east)
+       --([xshift=-0.5pt]frame.south east) ;
+       \draw[\tcb@rv@line@color,line width=.5pt]
+       ([yshift=-2.5pt]title.north east)--([xshift=-2pt,yshift=-2.5pt]title.north-|frame.east)
+       --([xshift=-2pt]frame.south east) ;},
+underlay middle={\draw[\tcb@rv@line@color,line width=1pt]
+       ([xshift=-0.5pt]frame.north east)
+       --([xshift=-0.5pt]frame.south east) ;
+       \draw[\tcb@rv@line@color,line width=.5pt]
+       ([xshift=-2pt]frame.north east)
+       --([xshift=-2pt]frame.south east);},
+underlay last={\draw[\tcb@rv@line@color,line width=1pt]
+       ([xshift=-0.5pt]frame.north east)
+       --([xshift=-0.5pt]frame.south east)--(frame.south west) ;
+       \draw[\tcb@rv@line@color,line width=.5pt]
+       ([xshift=-2pt]frame.north east)
+       --([yshift=1.5pt,xshift=-2pt]frame.south east)--([yshift=1.5pt]frame.south west);},
+#1}
 
 %% ここから元々のascolorbox
 \DeclareTColorBox{simplesquarebox}{ o m O{.5} O{} }% 
