@@ -1,0 +1,128 @@
+\tcblower で強制的に以降が下部指定となる
+上パート(upper part)、下パート(lower part)はタイトルとは別で、合計3つの要素から構成されることになる。lower partは\tcblowerを入れなければ登場しない。上パート下パートとしているが、左右に並べるなどすることもある。
+
+before,ボックスの上アキ,Number
+？ before skip,
+left skip,ボックスの左アキ,Number
+? grow to left by
+right skip,ボックスの右アキ,Number
+? grow to right by
+after,ボックスの下アキ,Number
+? after skip
+
+title,タイトル文字列とする,String
+notitle,すでにtitleがあるときの打ち消し
+adjusted title, titleと排他。adjust textで設定したテキストの高さを最小とした形でタイトル文字列とする,String
+adjust text,adjust titleとセットで使う。高さを作る。,String,Äpgjy
+squeezed title,titleと排他。収まらないときに長体をかけたタイトル文字列とする,String
+squeeze title*,titleと排他。adjusted title・squeeze titleの組み合わせ高価,String
+detach title,\tctbtitleにタイトルブロックを分離する
+attach title,detach titleの打ち消し
+attach ttile to upper,ボックスの上側にタイトルブロックを付ける。値textはオプショナルで、タイトルと本文の間に入る
+subtitle style,\tcbsubttile用の設定
+upperbox,上パートの表示。visibleまたはinvisible。,Boolean,visible
+visible,上下パート両方を表示する
+invisible,上下パート両方を表示しない
+saveto,上下両方のパートをファイルに保存する(後で\inputで呼び出すなど)。savelowertoと排他
+lowerbox,下パートの表示。visibleまたはinvisible。,Boolean,visible
+savelowerto,下パートをファイルに保存する(後で\inputで呼び出すなど)
+lower separated,下パートを上パートと分離して表示する,Boolean,true
+savedelimiter,newenvironmentと組み合わせる。いまいちわからん,String
+colframe,枠の色,Color,black!75!white
+colback,背景色,Color,black!5!white
+title filled,タイトルを塗り潰すか。colbacktitle・opacitybacktitle・title style・title codeを付けたときには自動でtrue,Bookean,true
+colbacktitle,タイトルの背景色,Color,black!50!white
+colsuper,上パートのテキスト色,Color,black
+collower,下パートのテキスト色,Color,black
+coltext,上下パートのテキスト色(colsuper+collowerの効果),Color,black
+colttile,タイトルの色,Color,white
+fontupper,上パートの設定(フォント・飾りなど)
+fontlower,下パートの設定(フォント・飾りなど)
+fonttitle,タイトルの設定(フォント・飾りなど)
+halign,下パートがなければテキストの水平アライメント(中寄せ・右寄せなど)、下パートもあるときは上パートのみに作用。justify・left・flush left・right・flush right・center・flush center,String,justify
+halign upper,上パートの水平アライメント,String,justify
+halign lower,下パートの水平アライメント,String,justify
+halign title,タイトルの水平アライメント,String,justify
+flushleft upper,halign=flush leftに同じ
+center upper,halign=flush centerに同じ
+flushright upper,halign=flush rightに同じ
+flushleft lower,halign lower=flush leftに同じ
+center lower,halign lower=flush centerに同じ
+flushright lower,halign lower=flush rightに同じ
+flushleft title,halign title=flush leftに同じ
+center title,halign title=flush centerに同じ
+flushright title,halign title=flush rightに同じ
+valign,上パートの垂直アライメント。top・center・bottom・scale(拡大)・scale*(valign scale limitまで),String,top
+valign upper,valignに同じ,String,top
+valign lower,valignの下パート版,String,top
+valign scale limit,scale*の上限,Number,1.1
+
+width,ボックスの横幅,Number,\linewidth
+text width,上パートの横幅,Number
+add to width,現在のボックスの横幅に幅を追加,Number
+
+toprule,枠線の上線幅,Number,0.5mm
+bottomrule,枠線の下線幅,Number,0.5mm
+leftrule,枠線の左線幅,Number,0.5mm
+rightrule,枠線の右線幅,Number,0.5mm
+titlerule,タイトル下の線幅,Number,0.5mm
+boxrule,各枠線の線幅(toprule・bottomrule・leftrule・rightrule・titleruleをまとめて指定),Number,0.5mm
+
+arc,枠線の角丸め。0にすれば角になる,Number,1mm
+circulator arc,円形にする(ボックスの高さはwidthより大きいこと)
+bean arc,楕円形にする(heightを指定必須)
+octogon arc,8角形にする
+arc is angular,◆状のとがった形にする
+arc is curved,arc is angularを取り消す
+outer arc,内側に角を作る(【】のようになる),Number
+auto outer arc,outer arcにおいて内部半径に応じて四方角を計算する
+
+boxsep,いろいろなところで共通のパディングを設定する,Number,1mm
+left,枠線と本文との左の間隔(lefttitle・leftupper・leftlowerを一度に設定。boxsepに追加),Number,4mm
+left*,左のバウンディングボックスとテキストの距離,Number
+lefttitle,タイトルと枠線との左の間隔(boxsepに追加),Number,4mm
+leftupper,上パートと枠線との左の間隔(boxsepに追加),Number,4mm
+leftlower,下パートと枠線との左の間隔(boxsepに追加),Number,4mm
+right,枠線と本文との右の間隔(righttitle・rightupper・rightlowerを一度に設定。boxsepに追加),Number,4mm
+right*,右のバウンディングボックスとテキストの距離,Number
+righttitle,タイトルと枠線との右の間隔,Number(boxsepに追加),4mm
+rightupper,上パートと枠線との右の間隔,Number(boxsepに追加),4mm
+rightlower,下パートと枠線との右の間隔,Number(boxsepに追加),4mm
+top,枠線と本文との上の間隔(boxsepに追加),Number,2mm
+toptitle,タイトルと枠線との上の間隔(boxsepに追加),Number,0mm
+bottom,枠線と本文との下の間隔(boxsepに追加),Number,2mm
+bottomtitle,タイトルと枠線との下の間隔(boxsepに追加),Number,0mm
+middle,上パートと下パートの間隔(boxsepに追加),Number,2mm
+size,widthが指定されていないときのデフォルト幅処理。normal・title・small・fbox・tight・minimal。rule形やパディング類のデフォルトセットのようなもの,String,normal
+oversize,横幅を既定値より増やす,Number,0pt
+toggle left and right,leftやrightの設定を逆転させる。none(スイッチしない)・forced(スイッチ)・evenpage(偶数ページの場合にスイッチ)。,String,none
+sharp corners,4つの角の形状をどう角にするかの指示(arcをいじる)。northwest・northeast・southeast・north・south・east・west・downhill・uphill・all,String,all
+rounded corners,4つの角の形状をどう丸にするかの指示。northwest・northeast・southwest・southeeast・north・south・east・west・downhill・uphll・all,String,all
+sharpish corners,4つを角にする(矩形になる)
+
+opacityframe,枠線を透明化,Number,1.0
+opacityback,背景を透明化,Number,1.0
+opacitybacktitle,タイトル背景を透明化,Number,1.0
+opacityfill,タイトルおよび本文背景を透明化,Number,1.0
+opacityupper,上パートを透明化,Number,1.0
+opacitylower,下パートを透明化,Number,1.0
+opacitytext,上下パートのテキストを透明化,Number,1.0
+opacitytitle,タイトルテキストを透明化,Number,1.0
+
+natural height,内容に応じて縦幅が変化
+height,縦幅を明示,Number
+height plus,固定heightに必要とあらば伸ばせる高さ,Number,0pt
+height from,「min to max」で縦幅を指定,String
+text height,上パートの上部から下パートの下部までの縦幅,Number
+add to height,現在のheightに追加,Number
+add to natural height,natural heightで求められる縦幅に追加,Number
+height fill,現在のページで下いっぱいまで伸ばすか。true・false・maximum。,String,true
+inherit height,多重にtcolorboxを使っているときの継承？,Number,1
+square,heightを幅に合わせる
+space,縦幅に余剰があるときの上パートと下パートの比率?,Number,0
+space to upper,上パートにスペース余剰を与える
+space to lower,下パートにスペース余剰を与える
+space to both,上下パートに均等に余剰を与える
+space to,縦幅の余剰をマクロに保存する(埋め画像を作るなど)
+
+p.59
