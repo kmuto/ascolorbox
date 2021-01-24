@@ -40,13 +40,15 @@
 % tcolorboxにパラメータを追加する
 \def\tcb@rv@line@width{.5pt}
 \def\tcb@rv@line@color{black}
+\def\tcb@rv@line@reversecolor{white}
 \tcbset{
   rv line width/.store in=\tcb@rv@line@width,
-  rv line color/.store in=\tcb@rv@line@color
+  rv line color/.store in=\tcb@rv@line@color,
+  rv line reversecolor/.store in=\tcb@rv@line@reversecolor
 }
 
 % ここからテスト中。こういうパラメータを変換で作って渡したいと思ったんだけど、展開でうまくいかないげ
-\newcommand{\reviewnote@tcoption}{rv line width=5pt,rv line color=red}
+% \newcommand{\reviewnote@tcoption}{rv line width=5pt,rv line color=red}
 
 % 結局これをパラメータベースで作らないといけないので、tcoptionパラメータもそのときに付けてしまえばいいか
 \newenvironment{reviewnote}[1][]{%
@@ -71,19 +73,20 @@
 \newenvironment{reviewcaution}[1][]{%
   \csdef{rv@withcaption}{true}
   \notblank{#1}{
-    \begin{rv@simplesquarebox@caption}{#1}[rv line width=.5pt,title=【#1】]
+    \begin{rv@practicebox@caption}{#1}[rv line color=red, rv line reversecolor=gray!80]
   }{
     \csundef{rv@withcaption}
-    \begin{rv@simplesquarebox@nocaption}
+    \begin{rv@practicebox@nocaption}
   }
 }{
   \ifcsdef{rv@withcaption}{
-    \end{rv@simplesquarebox@caption}
+    \end{rv@practicebox@caption}
   }{
-    \end{rv@simplesquarebox@nocaption}
+    \end{rv@practicebox@nocaption}
   }
 }
 
+% simplesquarebox
 \DeclareTColorBox{rv@simplesquarebox@nocaption}{ O{} }% 
 {empty, left=2mm, right=2mm, top=2.5mm, breakable,
   borderline={\tcb@rv@line@width}{0pt}{\tcb@rv@line@color},
@@ -100,6 +103,50 @@
   underlay last={\draw[\tcb@rv@line@color,line width=\tcb@rv@line@width](frame.north east) -- (frame.south east) -- (frame.south west) -- (frame.north west) ;},
   fonttitle=\ascb@gtfamily, title=【#1】,
 #2}
+
+% practicebox
+\DeclareTColorBox{rv@practicebox@caption}{ m O{} }%
+{enhanced,sharp corners,colback=black!10!white, colframe=black!10!white , attach boxed title to top left={xshift=0mm,yshift=1mm}, fonttitle=\ascb@gtfamily,varwidth boxed title=0.85\linewidth, breakable, arc=0mm,title={#1},
+enlarge top by=2mm,
+   boxed title style={empty,arc=0pt,outer arc=0pt,boxrule=0pt},
+   underlay unbroken and first={
+      \draw[\tcb@rv@line@color,ultra thick] (frame.north west) -- (frame.north east);
+      \draw[\tcb@rv@line@color] ([yshift=-.8mm]frame.north west) -- ([yshift=-.8mm]frame.north east);
+      \fill[\tcb@rv@line@color] ([yshift=1mm]frame.north west) rectangle +(6mm,6mm);
+      \node[white] at ([xshift=3mm,yshift=4mm]frame.north west){\large\ascb@textgt{練}};
+      \node at ([xshift=9mm,yshift=4mm]frame.north west){\large\ascb@textgt{習}};
+      \fill[\tcb@rv@line@color] ([xshift=12mm,yshift=1mm]frame.north west) rectangle +(6mm,6mm);
+      \node[\tcb@rv@line@reversecolor] at ([xshift=15mm,yshift=4mm]frame.north west){\large\ascb@textgt{問}};
+      \node at ([xshift=21mm,yshift=4mm]frame.north west){\large\ascb@textgt{題}};
+      \draw[thick] ([yshift=1mm]frame.north west) -- ++(0mm,6mm) -- ++(24mm,0mm) -- node[right=2mm] {\ascb@textgt{#1}} ++(0mm,-6mm) -- cycle;
+  },
+   underlay unbroken and last={
+      \draw[\tcb@rv@line@color,ultra thick] (frame.south west) -- (frame.south east);
+      \draw[\tcb@rv@line@color] ([yshift=.8mm]frame.south west) -- ([yshift=.8mm]frame.south east);
+  },
+#2}
+
+\DeclareTColorBox{rv@practicebox@nocaption}{ O{} }%
+{enhanced,sharp corners,colback=black!10!white, colframe=black!10!white , attach boxed title to top left={xshift=0mm,yshift=1mm}, fonttitle=\ascb@gtfamily,varwidth boxed title=0.85\linewidth, breakable, arc=0mm,title={\mbox{}},
+enlarge top by=2mm,
+   boxed title style={empty,arc=0pt,outer arc=0pt,boxrule=0pt},
+   underlay unbroken and first={
+      \draw[\tcb@rv@line@color,ultra thick] (frame.north west) -- (frame.north east);
+      \draw[\tcb@rv@line@color] ([yshift=-.8mm]frame.north west) -- ([yshift=-.8mm]frame.north east);
+      \fill[\tcb@rv@line@color] ([yshift=1mm]frame.north west) rectangle +(6mm,6mm);
+      \node[white] at ([xshift=3mm,yshift=4mm]frame.north west){\large\ascb@textgt{練}};
+      \node at ([xshift=9mm,yshift=4mm]frame.north west){\large\ascb@textgt{習}};
+      \fill[\tcb@rv@line@color] ([xshift=12mm,yshift=1mm]frame.north west) rectangle +(6mm,6mm);
+      \node[\tcb@rv@line@reversecolor] at ([xshift=15mm,yshift=4mm]frame.north west){\large\ascb@textgt{問}};
+      \node at ([xshift=21mm,yshift=4mm]frame.north west){\large\ascb@textgt{題}};
+     \draw[thick] ([yshift=1mm]frame.north west) -- ++(0mm,6mm) -- ++(24mm,0mm) -- ++(0mm,-6mm) -- cycle;
+  },
+   underlay unbroken and last={
+      \draw[\tcb@rv@line@color,ultra thick] (frame.south west) -- (frame.south east);
+      \draw[\tcb@rv@line@color] ([yshift=.8mm]frame.south west) -- ([yshift=.8mm]frame.south east);
+  },
+#1}
+
 
 %% ここから元々のascolorbox
 \DeclareTColorBox{simplesquarebox}{ o m O{.5} O{} }% 
