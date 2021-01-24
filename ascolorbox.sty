@@ -42,11 +42,13 @@
 \def\tcb@rv@line@color{black}
 \def\tcb@rv@line@reversecolor{white}
 \def\tcb@rv@dummy@caption{CAPTION} % 何か長さを作りたいときの文字列
+\def\tcb@rv@box@spacing{3pt}
 \tcbset{
   rv line width/.store in=\tcb@rv@line@width,
   rv line color/.store in=\tcb@rv@line@color,
   rv line reversecolor/.store in=\tcb@rv@line@reversecolor,
-  rv dummy caption/.store in=\tcb@rv@dummy@caption
+  rv dummy caption/.store in=\tcb@rv@dummy@caption,
+  rv box spacing/.store in=\tcb@rv@box@spacing
 }
 
 % ここからテスト中。こういうパラメータを変換で作って渡したいと思ったんだけど、展開でうまくいかないげ
@@ -250,6 +252,177 @@ underlay last={\draw[\tcb@rv@line@color,line width=1pt]
        ([xshift=-2pt]frame.north east)
        --([yshift=1.5pt,xshift=-2pt]frame.south east)--([yshift=1.5pt]frame.south west);},
 #1}
+
+\DeclareTColorBox{rv@ascolorbox4@caption}{ m O{}}%
+{enhanced, colback=white, colframe=white,
+attach boxed title to top left={xshift=1cm,yshift=-\tcboxedtitleheight/2}, fonttitle=\bfseries,varwidth boxed title=0.85\linewidth, coltitle=black, fonttitle=\ascb@gtfamily,
+enlarge top by=2mm, enlarge bottom by=2mm, breakable, sharp corners,
+boxed title style={colback=white,left=0mm,right=0mm},
+borderline={.75pt}{\tcb@rv@box@spacing}{black,dotted},
+underlay unbroken={\draw[black,line width=.5pt]
+       (title.east|-frame.north east)--([xshift=-\tcb@rv@box@spacing*4pt]frame.north east)
+       arc [start angle=180, end angle=270, radius=\tcb@rv@box@spacing*4pt]
+       -- ([yshift=\tcb@rv@box@spacing*4pt]frame.south east)
+       arc [start angle=90, end angle=180, radius=\tcb@rv@box@spacing*4pt]
+       -- ([xshift=\tcb@rv@box@spacing*4pt]frame.south west)
+       arc [start angle=0, end angle=90, radius=\tcb@rv@box@spacing*4pt]
+       -- ([yshift=-\tcb@rv@box@spacing*4pt]frame.north west)
+       arc [start angle=270, end angle=360, radius=\tcb@rv@box@spacing*4pt]
+       -- (frame.north west-|title.west) ;
+       \filldraw[fill=gray,draw=gray]
+       (frame.north east) -- +(0pt,-\tcb@rv@box@spacing*2pt) -- +(-\tcb@rv@box@spacing*2pt,-\tcb@rv@box@spacing*2pt) -- +(-\tcb@rv@box@spacing*2pt,0pt) -- cycle;
+       \filldraw[fill=gray,draw=gray]
+       (frame.south east) -- +(-\tcb@rv@box@spacing*2pt,0pt) -- +(-\tcb@rv@box@spacing*2pt,\tcb@rv@box@spacing*2pt) -- +(0pt,\tcb@rv@box@spacing*2pt) -- cycle;
+       \filldraw[fill=gray,draw=gray]
+       (frame.south west) -- +(0pt,\tcb@rv@box@spacing*2pt) -- +(\tcb@rv@box@spacing*2pt,\tcb@rv@box@spacing*2pt) -- +(\tcb@rv@box@spacing*2pt,0pt) -- cycle;
+       \filldraw[fill=gray,draw=gray]
+       (frame.north west) -- +(0pt,-\tcb@rv@box@spacing*2pt) -- +(\tcb@rv@box@spacing*2pt,-\tcb@rv@box@spacing*2pt) -- +(\tcb@rv@box@spacing*2pt,0pt) -- cycle;
+       },
+underlay first={\draw[black,line width=.5pt]
+       (title.east|-frame.north east)--([xshift=-\tcb@rv@box@spacing*4pt]frame.north east) 
+       arc [start angle=180, end angle=270, radius=\tcb@rv@box@spacing*4pt] 
+       -- (frame.south east) ;
+       \draw[black,line width=.5pt]
+       (frame.south west)
+       -- ([yshift=-\tcb@rv@box@spacing*4pt]frame.north west)
+       arc [start angle=270, end angle=360, radius=\tcb@rv@box@spacing*4pt] 
+       -- (frame.north west-|title.west) ;
+       \filldraw[fill=gray,draw=gray]
+       (frame.north east) -- +(0pt,-\tcb@rv@box@spacing*2pt) -- +(-\tcb@rv@box@spacing*2pt,-\tcb@rv@box@spacing*2pt) -- +(-\tcb@rv@box@spacing*2pt,0pt) -- cycle;
+       \filldraw[fill=gray,draw=gray]
+       (frame.north west) -- +(0pt,-\tcb@rv@box@spacing*2pt) -- +(\tcb@rv@box@spacing*2pt,-\tcb@rv@box@spacing*2pt) -- +(\tcb@rv@box@spacing*2pt,0pt) -- cycle;
+       },
+underlay middle={\draw[black,line width=.5pt]
+       (frame.north east)--(frame.south east) ;
+       \draw[black,line width=.5pt]
+       (frame.south west)--(frame.north west) ;
+       },
+underlay last={\draw[black,line width=.5pt]
+       (frame.north east) -- ([yshift=\tcb@rv@box@spacing*4pt]frame.south east) 
+       arc [start angle=90, end angle=180, radius=\tcb@rv@box@spacing*4pt] 
+       -- ([xshift=\tcb@rv@box@spacing*4pt]frame.south west)
+       arc [start angle=0, end angle=90, radius=\tcb@rv@box@spacing*4pt] 
+       -- (frame.north west);
+              \filldraw[fill=gray,draw=gray]
+       (frame.south east) -- +(-\tcb@rv@box@spacing*2pt,0pt) -- +(-\tcb@rv@box@spacing*2pt,\tcb@rv@box@spacing*2pt) -- +(0pt,\tcb@rv@box@spacing*2pt) -- cycle;
+       \filldraw[fill=gray,draw=gray]
+       (frame.south west) -- +(0pt,\tcb@rv@box@spacing*2pt) -- +(\tcb@rv@box@spacing*2pt,\tcb@rv@box@spacing*2pt) -- +(\tcb@rv@box@spacing*2pt,0pt) -- cycle;
+       },
+title=【#1】, #2}
+
+% FIXME:キャプション幅はどこから作ってるんだろう？
+\DeclareTColorBox{rv@ascolorbox4@nocaption}{ O{}}%
+{enhanced, colback=white, colframe=white,
+borderline={.75pt}{\tcb@rv@box@spacing}{black,dotted},
+underlay unbroken={\draw[black,line width=.5pt]
+       (title.east|-frame.north east)--([xshift=-\tcb@rv@box@spacing*4pt]frame.north east)
+       arc [start angle=180, end angle=270, radius=\tcb@rv@box@spacing*4pt]
+       -- ([yshift=\tcb@rv@box@spacing*4pt]frame.south east)
+       arc [start angle=90, end angle=180, radius=\tcb@rv@box@spacing*4pt]
+       -- ([xshift=\tcb@rv@box@spacing*4pt]frame.south west)
+       arc [start angle=0, end angle=90, radius=\tcb@rv@box@spacing*4pt]
+       -- ([yshift=-\tcb@rv@box@spacing*4pt]frame.north west)
+       arc [start angle=270, end angle=360, radius=\tcb@rv@box@spacing*4pt]
+       -- (frame.north west-|title.west) ;
+       \filldraw[fill=gray,draw=gray]
+       (frame.north east) -- +(0pt,-\tcb@rv@box@spacing*2pt) -- +(-\tcb@rv@box@spacing*2pt,-\tcb@rv@box@spacing*2pt) -- +(-\tcb@rv@box@spacing*2pt,0pt) -- cycle;
+       \filldraw[fill=gray,draw=gray]
+       (frame.south east) -- +(-\tcb@rv@box@spacing*2pt,0pt) -- +(-\tcb@rv@box@spacing*2pt,\tcb@rv@box@spacing*2pt) -- +(0pt,\tcb@rv@box@spacing*2pt) -- cycle;
+       \filldraw[fill=gray,draw=gray]
+       (frame.south west) -- +(0pt,\tcb@rv@box@spacing*2pt) -- +(\tcb@rv@box@spacing*2pt,\tcb@rv@box@spacing*2pt) -- +(\tcb@rv@box@spacing*2pt,0pt) -- cycle;
+       \filldraw[fill=gray,draw=gray]
+       (frame.north west) -- +(0pt,-\tcb@rv@box@spacing*2pt) -- +(\tcb@rv@box@spacing*2pt,-\tcb@rv@box@spacing*2pt) -- +(\tcb@rv@box@spacing*2pt,0pt) -- cycle;
+       },
+underlay first={\draw[black,line width=.5pt]
+       (title.east|-frame.north east)--([xshift=-\tcb@rv@box@spacing*4pt]frame.north east) 
+       arc [start angle=180, end angle=270, radius=\tcb@rv@box@spacing*4pt] 
+       -- (frame.south east) ;
+       \draw[black,line width=.5pt]
+       (frame.south west)
+       -- ([yshift=-\tcb@rv@box@spacing*4pt]frame.north west)
+       arc [start angle=270, end angle=360, radius=\tcb@rv@box@spacing*4pt] 
+       -- (frame.north west-|title.west) ;
+       \filldraw[fill=gray,draw=gray]
+       (frame.north east) -- +(0pt,-\tcb@rv@box@spacing*2pt) -- +(-\tcb@rv@box@spacing*2pt,-\tcb@rv@box@spacing*2pt) -- +(-\tcb@rv@box@spacing*2pt,0pt) -- cycle;
+       \filldraw[fill=gray,draw=gray]
+       (frame.north west) -- +(0pt,-\tcb@rv@box@spacing*2pt) -- +(\tcb@rv@box@spacing*2pt,-\tcb@rv@box@spacing*2pt) -- +(\tcb@rv@box@spacing*2pt,0pt) -- cycle;
+       },
+underlay middle={\draw[black,line width=.5pt]
+       (frame.north east)--(frame.south east) ;
+       \draw[black,line width=.5pt]
+       (frame.south west)--(frame.north west) ;
+       },
+underlay last={\draw[black,line width=.5pt]
+       (frame.north east) -- ([yshift=\tcb@rv@box@spacing*4pt]frame.south east) 
+       arc [start angle=90, end angle=180, radius=\tcb@rv@box@spacing*4pt] 
+       -- ([xshift=\tcb@rv@box@spacing*4pt]frame.south west)
+       arc [start angle=0, end angle=90, radius=\tcb@rv@box@spacing*4pt] 
+       -- (frame.north west);
+              \filldraw[fill=gray,draw=gray]
+       (frame.south east) -- +(-\tcb@rv@box@spacing*2pt,0pt) -- +(-\tcb@rv@box@spacing*2pt,\tcb@rv@box@spacing*2pt) -- +(0pt,\tcb@rv@box@spacing*2pt) -- cycle;
+       \filldraw[fill=gray,draw=gray]
+       (frame.south west) -- +(0pt,\tcb@rv@box@spacing*2pt) -- +(\tcb@rv@box@spacing*2pt,\tcb@rv@box@spacing*2pt) -- +(\tcb@rv@box@spacing*2pt,0pt) -- cycle;
+       },
+#1}
+
+\DeclareTColorBox{rv@ascolorbox5@caption}{ m O{} }%
+{enhanced,colback=white, colframe=white, coltext=black, attach boxed title to top left={xshift=1mm,yshift=0mm}, fonttitle=\bfseries\ascb@gtfamily,varwidth boxed title=0.85\linewidth, colbacktitle=black!45!white, breakable,
+enlarge top by=3mm, enlarge bottom by=3mm,
+   boxed title style={empty,arc=0pt,outer arc=0pt,boxrule=0pt},
+   underlay boxed title={\fill[\tcb@rv@line@color] (title.north west)
+      -- (title.north east) --node[right=3mm]{\ascb@textgt{}}+(0,-\tcboxedtitleheight+.5mm) % サブタイトル削除の修正が必要
+      -- ([xshift=-1mm,yshift=.5mm]frame.north east)
+      -- +(0mm,-.5mm) -- (title.south west) -- cycle;
+      \draw[\tcb@rv@line@color] ([yshift=-.5mm]title.south west) --
+      ([xshift=-1mm,yshift=-.5mm]frame.north east);},
+   underlay unbroken={\draw[\tcb@rv@line@color, ultra thick] ([xshift=1mm,yshift=-.3mm]frame.south west)
+      -- ([xshift=-1mm,yshift=-.3mm]frame.south east);
+      \draw[\tcb@rv@line@color] ([xshift=1mm,yshift=.5mm]frame.south west)
+      -- ([xshift=-1mm,yshift=.5mm]frame.south east);
+      \draw[\tcb@rv@line@color,thick,dotted] ([yshift=\tcboxedtitleheight+1mm]frame.north west)
+      -- ([yshift=\tcboxedtitleheight+1mm]frame.north east)
+      -- ([yshift=-2mm]frame.south east) -- ([yshift=-2mm]frame.south west) -- cycle;},
+   underlay first={\draw[\tcb@rv@line@color,thick,dotted] ([yshift=\tcboxedtitleheight+1mm]frame.north west) 
+      -- ([yshift=\tcboxedtitleheight+1mm]frame.north east) 
+      -- (frame.south east);
+      \draw[\tcb@rv@line@color,thick,dotted] (frame.south west)
+      -- ([yshift=\tcboxedtitleheight+1mm]frame.north west);},
+   underlay middle={\draw[\tcb@rv@line@color,thick,dotted] (frame.north east) -- (frame.south east);
+      \draw[\tcb@rv@line@color,thick,dotted] (frame.south west) -- (frame.north west);},
+   underlay last={\draw[\tcb@rv@line@color,thick,dotted] (frame.north east) -- ([yshift=-2mm]frame.south east) 
+   -- ([yshift=-2mm]frame.south west) -- (frame.north west);
+   \draw[\tcb@rv@line@color, ultra thick] ([xshift=1mm,yshift=-.3mm]frame.south west)
+   -- ([xshift=-1mm,yshift=-.3mm]frame.south east);
+   \draw[\tcb@rv@line@color] ([xshift=1mm,yshift=.5mm]frame.south west) 
+   -- ([xshift=-1mm,yshift=.5mm]frame.south east);},
+   title={#1},#2}
+
+\DeclareTColorBox{rv@ascolorbox5@nocaption}{ O{} }%
+{enhanced,colback=white, colframe=white, coltext=black, breakable,
+enlarge top by=3mm, enlarge bottom by=3mm,
+   underlay unbroken={\draw[\tcb@rv@line@color, ultra thick] ([xshift=1mm,yshift=-.3mm]frame.south west)
+      -- ([xshift=-1mm,yshift=-.3mm]frame.south east);
+      \draw[\tcb@rv@line@color] ([xshift=1mm,yshift=.5mm]frame.south west)
+      -- ([xshift=-1mm,yshift=.5mm]frame.south east);
+      \draw[\tcb@rv@line@color,thick,dotted] ([yshift=1mm]frame.north west)
+      -- ([yshift=1mm]frame.north east)
+      -- ([yshift=-2mm]frame.south east) -- ([yshift=-2mm]frame.south west) -- cycle;},
+   underlay first={\draw[\tcb@rv@line@color,thick,dotted] ([yshift=1mm]frame.north west) 
+      -- ([yshift=1mm]frame.north east) 
+      -- (frame.south east);
+      \draw[\tcb@rv@line@color,thick,dotted] (frame.south west)
+      -- ([yshift=1mm]frame.north west);},
+   underlay middle={\draw[\tcb@rv@line@color,thick,dotted] (frame.north east) -- (frame.south east);
+      \draw[\tcb@rv@line@color,thick,dotted] (frame.south west) -- (frame.north west);},
+   underlay last={\draw[\tcb@rv@line@color,thick,dotted] (frame.north east) -- ([yshift=-2mm]frame.south east) 
+   -- ([yshift=-2mm]frame.south west) -- (frame.north west);
+   \draw[\tcb@rv@line@color, ultra thick] ([xshift=1mm,yshift=-.3mm]frame.south west)
+   -- ([xshift=-1mm,yshift=-.3mm]frame.south east);
+   \draw[\tcb@rv@line@color] ([xshift=1mm,yshift=.5mm]frame.south west) 
+   -- ([xshift=-1mm,yshift=.5mm]frame.south east);},
+   #1}
+
+
 
 %% ここから元々のascolorbox
 \DeclareTColorBox{simplesquarebox}{ o m O{.5} O{} }% 
