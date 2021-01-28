@@ -1,7 +1,5 @@
-%
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{areview-tcbox}[2021/1/24, Version 0.0.1]
-% original version: ascolorbox 2019/4/30, Version 1.0.3]
+\ProvidesPackage{review-tcbox}[2021/1/28, Version 0.1.0]
 \RequirePackage{tikz,tcolorbox,varwidth,multicol,ifthen,ifptex,ifluatex,ifuptex,ifxetex}
 
 \usetikzlibrary{calc}
@@ -38,12 +36,12 @@
               }
 }
 
-%\def\tcb@rv@marker@markcolback{yellow!50!black}
+% markerスタイルのデフォルト設定
 \def\tcb@rv@marker@markcolback{gray!80}
 \def\tcb@rv@marker@markcoltext{white}
 \def\tcb@rv@marker@markchar{!}
 
-% 古いtcolorboxだとcolframe,colbackがない
+% 古いtcolorboxだとcolframe、colbackがない
 \tcbset{%
   colframe/.code={\colorlet{tcbcolframe}{#1}\colorlet{tcbcol@frame}{#1}},
   colback/.code={\colorlet{tcbcolback}{#1}\colorlet{tcbcol@back}{#1}},
@@ -57,15 +55,15 @@
 \DeclareTColorBox{rv@squarebox@nocaption}{ O{} }{%
   empty, % スキン
   left=3mm,right=3mm,top=3mm,bottom=3mm, % 内部パディング。デフォルトは4mm
-  arc=0mm, % コーナーの半径
-  % カラーは 色A!色Aの含み具合!色B。色Bを省略したときにはwhite。
+  arc=0mm, % コーナーの半径。デフォルトは1mm
+  % カラーは 色A!色Aの含み具合!色B。色Bを省略したときにはwhite
   colback=white, %white, % 背景。デフォルトはblack!5!white
-  breakable, % 分断許容
-  enhanced jigsaw, % 分断時に罫線切り取り
+  breakable, % ページ分断の許容
+  enhanced jigsaw, % 分断時に上下罫線を切り取り
   pad at break=0mm, % 分断されたときの上下アキ。デフォルトは3.5mm
   boxrule=.25mm, % 線幅。toprule,bottomrule,leftrule,rightruleで個別指定も可
-  before upper={\parindent\reviewtcb@zw{1}}, % 1行目を字下げする
-  #1}
+  before upper={\parindent\reviewtcb@zw{1}}, % 内容の1行目を字下げ
+  #1} % オプション値で追加・上書き可能
 
 \DeclareTColorBox{rv@squarebox@caption}{ m O{} }{%
   empty,
@@ -83,9 +81,11 @@
   title={#1},
   #2}
 
-% squareboxtopleft
-%  - ごくシンプルな矩形・キャプション位置は左上
-\DeclareTColorBox{rv@squareboxtopleft@nocaption}{ O{} }{%
+% squaresepcaptionbox
+%  - ごくシンプルな矩形・キャプション位置は分離
+%  - キャプション位置をオプションで指定する (キャプションなしの場合は意味がない)。
+%    attach boxed title to top left など
+\DeclareTColorBox{rv@squaresepcaptionbox@nocaption}{ O{} }{%
   empty,
   left=3mm,right=3mm,top=3mm,bottom=3mm,
   arc=0mm,
@@ -97,7 +97,7 @@
   before upper={\parindent\reviewtcb@zw{1}},
   #1}
 
-\DeclareTColorBox{rv@squareboxtopleft@caption}{ m O{} }{%
+\DeclareTColorBox{rv@squaresepcaptionbox@caption}{ m O{} }{%
   empty,
   left=3mm,right=3mm,top=3mm,bottom=3mm,
   arc=0mm,
@@ -112,161 +112,6 @@
   colbacktitle=black,
   title={#1},
   attach boxed title to top left,% パラメータでtoの値を指定できないかとやってみたのだが無理そう。attach boxed title自体のパラメータもなし。
-  #2}
-
-% squareboxtopcenter
-%  - ごくシンプルな矩形・キャプション位置は上中央
-\DeclareTColorBox{rv@squareboxtopcenter@nocaption}{ O{} }{%
-  empty,
-  left=3mm,right=3mm,top=3mm,bottom=3mm,
-  arc=0mm,
-  colback=white,
-  breakable,
-  enhanced jigsaw,
-  pad at break=0mm,
-  boxrule=.25mm,
-  before upper={\parindent\reviewtcb@zw{1}},
-  #1}
-
-\DeclareTColorBox{rv@squareboxtopcenter@caption}{ m O{} }{%
-  empty,
-  left=3mm,right=3mm,top=3mm,bottom=3mm,
-  arc=0mm,
-  colback=white,
-  breakable,
-  enhanced jigsaw,
-  pad at break=0mm,
-  boxrule=.25mm,
-  before upper={\parindent\reviewtcb@zw{1}},
-  boxed title style={arc=0mm,boxrule=0mm},
-  fonttitle={\reviewtcb@gtfamily\sffamily\bfseries},
-  colbacktitle=black,
-  title={#1},
-  attach boxed title to top center,
-  #2}
-
-% squareboxtopright
-%  - ごくシンプルな矩形・キャプション位置は右上
-\DeclareTColorBox{rv@squareboxtopright@nocaption}{ O{} }{%
-  empty,
-  left=3mm,right=3mm,top=3mm,bottom=3mm,
-  arc=0mm,
-  colback=white,
-  breakable,
-  enhanced jigsaw,
-  pad at break=0mm,
-  boxrule=.25mm,
-  before upper={\parindent\reviewtcb@zw{1}},
-  #1}
-
-\DeclareTColorBox{rv@squareboxtopright@caption}{ m O{} }{%
-  empty,
-  left=3mm,right=3mm,top=3mm,bottom=3mm,
-  arc=0mm,
-  colback=white,
-  breakable,
-  enhanced jigsaw,
-  pad at break=0mm,
-  boxrule=.25mm,
-  before upper={\parindent\reviewtcb@zw{1}},
-  boxed title style={arc=0mm,boxrule=0mm},
-  fonttitle={\reviewtcb@gtfamily\sffamily\bfseries},
-  colbacktitle=black,
-  title={#1},
-  attach boxed title to top right,
-  #2}
-
-% squareboxbottomleft
-%  - ごくシンプルな矩形・キャプション位置は左下
-\DeclareTColorBox{rv@squareboxbottomleft@nocaption}{ O{} }{%
-  empty,
-  left=3mm,right=3mm,top=3mm,bottom=3mm,
-  arc=0mm,
-  colback=white,
-  breakable,
-  enhanced jigsaw,
-  pad at break=0mm,
-  boxrule=.25mm,
-  before upper={\parindent\reviewtcb@zw{1}},
-  #1}
-
-\DeclareTColorBox{rv@squareboxbottomleft@caption}{ m O{} }{%
-  empty,
-  left=3mm,right=3mm,top=3mm,bottom=3mm,
-  arc=0mm,
-  colback=white,
-  breakable,
-  enhanced jigsaw,
-  pad at break=0mm,
-  boxrule=.25mm,
-  before upper={\parindent\reviewtcb@zw{1}},
-  boxed title style={arc=0mm,boxrule=0mm},
-  fonttitle={\reviewtcb@gtfamily\sffamily\bfseries},
-  colbacktitle=black,
-  title={#1},
-  attach boxed title to bottom left,
-  #2}
-
-% squareboxbottomcenter
-%  - ごくシンプルな矩形・キャプション位置は下中央
-\DeclareTColorBox{rv@squareboxbottomcenter@nocaption}{ O{} }{%
-  empty,
-  left=3mm,right=3mm,top=3mm,bottom=3mm,
-  arc=0mm,
-  colback=white,
-  breakable,
-  enhanced jigsaw,
-  pad at break=0mm,
-  boxrule=.25mm,
-  before upper={\parindent\reviewtcb@zw{1}},
-  #1}
-
-\DeclareTColorBox{rv@squareboxbottomcenter@caption}{ m O{} }{%
-  empty,
-  left=3mm,right=3mm,top=3mm,bottom=3mm,
-  arc=0mm,
-  colback=white,
-  breakable,
-  enhanced jigsaw,
-  pad at break=0mm,
-  boxrule=.25mm,
-  before upper={\parindent\reviewtcb@zw{1}},
-  boxed title style={arc=0mm,boxrule=0mm},
-  fonttitle={\reviewtcb@gtfamily\sffamily\bfseries},
-  colbacktitle=black,
-  title={#1},
-  attach boxed title to bottom center,
-  #2}
-
-% squareboxbottomright
-%  - ごくシンプルな矩形・キャプション位置は右下
-\DeclareTColorBox{rv@squareboxbottomright@nocaption}{ O{} }{%
-  empty,
-  left=3mm,right=3mm,top=3mm,bottom=3mm,
-  arc=0mm,
-  colback=white,
-  breakable,
-  enhanced jigsaw,
-  pad at break=0mm,
-  boxrule=.25mm,
-  before upper={\parindent\reviewtcb@zw{1}},
-  #1}
-
-\DeclareTColorBox{rv@squareboxbottomright@caption}{ m O{} }{%
-  empty,
-  left=3mm,right=3mm,top=3mm,bottom=3mm,
-  arc=0mm,
-  colback=white,
-  breakable,
-  enhanced jigsaw,
-  pad at break=0mm,
-  boxrule=.25mm,
-  before upper={\parindent\reviewtcb@zw{1}},
-  boxed title style={arc=0mm,boxrule=0mm},
-  fonttitle={\reviewtcb@gtfamily\sffamily\bfseries},
-  colbacktitle=black,
-  title={#1},
-  attach boxed title to bottom right,
   #2}
 
 % folderbox
@@ -336,7 +181,7 @@
 #2}
 
 % dottedbox
-%  - ドット囲み。キャプションは中の本文に接続させている
+%  - ドット囲み。キャプションは内容に接続させている
 \DeclareTColorBox{rv@dottedbox@nocaption}{ O{} }{%
   enhanced,breakable,arc=1mm,
   frame hidden,colback=white,
@@ -357,9 +202,9 @@
   title={#1},
   #2}
 
-% sidelinebox
-%  - 左右線囲み
-\DeclareTColorBox{rv@sidelinebox@nocaption}{ O{} }{%
+% bothsidelinebox
+%  - 左右線
+\DeclareTColorBox{rv@bothsidelinebox@nocaption}{ O{} }{%
   enhanced,breakable,skin=enhancedmiddle,
   frame hidden,interior hidden,top=0mm,bottom=0mm,boxsep=0mm,
   borderline={0.4mm}{0mm}{black},
@@ -368,12 +213,36 @@
   before upper={\parindent\reviewtcb@zw{1}},
   #1}
 
-\DeclareTColorBox{rv@sidelinebox@caption}{ m O{} }{%
+\DeclareTColorBox{rv@bothsidelinebox@caption}{ m O{} }{%
   enhanced,breakable,skin=enhancedmiddle,
   frame hidden,interior hidden,top=0mm,bottom=0mm,boxsep=0mm,
   borderline={0.4mm}{0mm}{black},
   borderline={0.4mm}{0.4mm}{black!50},
   borderline={0.4mm}{0.8mm}{black!10},
+  before upper={\parindent\reviewtcb@zw{1}},
+  coltitle=black,
+  bottomtitle=2mm,
+  fonttitle={\reviewtcb@gtfamily\sffamily\bfseries},
+  title={#1},
+  #2}
+
+% leftsidelinebox
+%  - 左線
+\DeclareTColorBox{rv@leftsidelinebox@nocaption}{ O{} }{%
+  enhanced,breakable,skin=enhancedmiddle,
+  frame hidden,interior hidden,top=0mm,bottom=0mm,right=0mm,boxsep=0mm,
+  borderline west={0.4mm}{0mm}{black}, % westを付けて左のみにする
+  borderline west={0.4mm}{0.4mm}{black!50},
+  borderline west={0.4mm}{0.8mm}{black!10},
+  before upper={\parindent\reviewtcb@zw{1}},
+  #1}
+
+\DeclareTColorBox{rv@leftsidelinebox@caption}{ m O{} }{%
+  enhanced,breakable,skin=enhancedmiddle,
+  frame hidden,interior hidden,top=0mm,bottom=0mm,right=0mm,boxsep=0mm,
+  borderline west={0.4mm}{0mm}{black},
+  borderline west={0.4mm}{0.4mm}{black!50},
+  borderline west={0.4mm}{0.8mm}{black!10},
   before upper={\parindent\reviewtcb@zw{1}},
   coltitle=black,
   bottomtitle=2mm,
@@ -408,12 +277,10 @@
   coltitle=black,
   colbacktitle=white,
   titlerule=0.25mm,
-  % titlerule style={}, % FIXME:ダッシュかドットにしたいが変なことになる
+  % titlerule style={}, % ダッシュかドットにしたいが変なことになる
   fonttitle={\reviewtcb@gtfamily\sffamily\bfseries},
   title={#1},
   #2}
-
-
 
 % marker
 %  - tcolorboxマニュアルのTipsを改変。白黒をデフォルトとし、分割に対応
@@ -477,3 +344,5 @@
  before upper={\tcbtitle\par\parindent\reviewtcb@zw{1}},
  % before upper={\parindent\reviewtcb@zw{1}},
  drop fuzzy shadow,#2}
+
+\endinput
